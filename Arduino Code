@@ -1,0 +1,46 @@
+int sensorpin = 0;                 // analog pin used to connect the sharp sensor
+int value = 0; 
+int piezoPin= 7;                   // Arduino pin used for the piezo speaker
+int buttonState = 0;
+int buttonHasBeenPressedOnce = 0;
+int buttonPin = 2;                 // Arduino pin used for the button
+int counter = 0;
+char display1[]= "counter: ";
+void setup() {
+Serial.begin(9600);
+pinMode(buttonPin, INPUT);
+}
+
+void loop() {
+  buttonState = digitalRead(buttonPin);
+
+  
+  if (buttonState == HIGH) {
+    buttonHasBeenPressedOnce = 1;
+    counter = 0;
+    delay(1000);
+  }
+  
+  if (buttonHasBeenPressedOnce == 1) {
+  value = analogRead(sensorpin);       // reads the analog voltage of the sensor
+  //Serial.println(value);             // prints the value of the sensor to the serial monitor
+  
+    if (value>400) {
+    tone(piezoPin, 1000, 300);
+    delay(1000);
+    counter = counter +1;
+        
+    
+    }
+   
+    
+    buttonState = digitalRead(buttonPin);
+    if (buttonState == HIGH) {
+      buttonHasBeenPressedOnce = 2;
+      delay (1000);
+      Serial.println(display1);
+      Serial.print(counter);
+    }
+     
+  }
+}
